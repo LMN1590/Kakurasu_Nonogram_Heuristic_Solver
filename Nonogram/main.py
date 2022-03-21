@@ -1,16 +1,24 @@
 import pygame
 def welcome_page():
     screen = pygame.display.set_mode((800, 600))
-    pygame.display.set_caption('Nonogram Ultimate Solver')
+    pygame.display.set_caption('Kukarasu Ultimate Solver')
     font0 = pygame.font.Font(None, 60)
     font = pygame.font.Font(None, 32)
-    heading = font0.render('Welcome to Nonogram Ultimate Solver',True,(255,255,255))
+    heading = font0.render('Welcome to Kukarasu Ultimate Solver',True,(255,255,255))
     heading_rect=heading.get_rect()
     heading_rect.center = (400,50)
     text0 = font.render('Please input the size',True,(255,255,255))
     text0_rect = text0.get_rect()
-    text0_rect.center = (400,120)
-    input0_rect = pygame.Rect(200,150,0,0)
+    text0_rect.center = (400,150)
+    input0_rect = pygame.Rect(200,200,0,0)
+    text1 = font.render('Please input numbers on column',True,(255,255,255))
+    text1_rect = text1.get_rect()
+    text1_rect.center = (400,280)
+    input1_rect = pygame.Rect(200,200,0,0)
+    text2 = font.render('Please input numbers on row',True,(255,255,255))
+    text2_rect = text2.get_rect()
+    text2_rect.center = (400,410)
+    input2_rect = pygame.Rect(200,200,0,0)
     befs = pygame.image.load('./image/befs.png')
     befs = pygame.transform.scale(befs,(130,130))
     befs_rect=befs.get_rect()
@@ -30,9 +38,13 @@ def welcome_page():
     color_active = pygame.Color('lightskyblue3')
     color_passive = pygame.Color('chartreuse4')
     color0 = color_passive
-    active = [False]
+    color1 = color_passive
+    color2 = color_passive
+    active = [False,False,False]
     user_text0 = ''
-    check1,check2=False,False
+    user_text1 = ''
+    user_text2 = ''
+    check1,check2=True,True
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -41,19 +53,48 @@ def welcome_page():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if input0_rect.collidepoint(event.pos): active[0] = True
                 else: active[0] = False
+                if input1_rect.collidepoint(event.pos): active[1] = True
+                else: active[1] = False
+                if input2_rect.collidepoint(event.pos): active[2] = True
+                else: active[2] = False
                 if befs_rect.collidepoint(event.pos):
                     check1,check2 = True,True
+                    if len(user_text1.split()) != int(user_text0): check1 = False
+                    else: check1 = True
+                    if len(user_text2.split()) != int(user_text0): check2 = False
+                    else: check2 = True
+                    if check1 and check2: return int(user_text0),list(map(int,user_text1.split())),list(map(int,user_text2.split())),0,True
                 if bfs_rect.collidepoint(event.pos):
-                    pass
+                    if len(user_text1.split()) != int(user_text0): check1 = False
+                    else: check1 = True
+                    if len(user_text2.split()) != int(user_text0): check2 = False
+                    else: check2 = True
+                    if check1 and check2: return int(user_text0),list(map(int,user_text1.split())),list(map(int,user_text2.split())),1,True
                 if befsdemo_rect.collidepoint(event.pos):
-                    pass
+                    if len(user_text1.split()) != int(user_text0): check1 = False
+                    else: check1 = True
+                    if len(user_text2.split()) != int(user_text0): check2 = False
+                    else: check2 = True
+                    if check1 and check2: return int(user_text0),list(map(int,user_text1.split())),list(map(int,user_text2.split())),2,True
                 if bfsdemo_rect.collidepoint(event.pos):
-                    pass
+                    if len(user_text1.split()) != int(user_text0): check1 = False
+                    else: check1 = True
+                    if len(user_text2.split()) != int(user_text0): check2 = False
+                    else: check2 = True
+                    if check1 and check2: return int(user_text0),list(map(int,user_text1.split())),list(map(int,user_text2.split())),4,True
             if event.type == pygame.KEYDOWN:
                 if active[0]:
                     if event.key == pygame.K_RETURN: active[0] = False
                     elif event.key == pygame.K_BACKSPACE: user_text0 = user_text0[:-1]
                     elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9]:user_text0 += event.unicode
+                elif active[1]:
+                    if event.key == pygame.K_RETURN: active[1] = False
+                    elif event.key == pygame.K_BACKSPACE: user_text1 = user_text1[:-1]
+                    elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_SPACE]:user_text1 += event.unicode
+                elif active[2]:
+                    if event.key == pygame.K_RETURN: active[2] = False
+                    elif event.key == pygame.K_BACKSPACE: user_text2 = user_text2[:-1]
+                    elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_SPACE]:user_text2 += event.unicode
         screen.fill((0, 0, 0))
         if not check1:
             error1 = font.render('Wrong number of inputs on column',True,(255,0,0))
@@ -67,14 +108,32 @@ def welcome_page():
             screen.blit(error2,error2_rect)
         if active[0]: color0 = color_active
         else: color0 = color_passive
+        if active[1]: color1 = color_active
+        else: color1 = color_passive
+        if active[2]: color2 = color_active
+        else: color2 = color_passive
         pygame.draw.rect(screen, color0, input0_rect)
         text0_surface = font.render(user_text0, True, (255, 255, 255))
         screen.blit(text0_surface, input0_rect)
         input0_rect.w = max(50, text0_surface.get_width())
         input0_rect.h = text0_surface.get_height()
-        input0_rect.center = (400,150)
+        input0_rect.center = (400,200)
+        pygame.draw.rect(screen, color1, input1_rect)
+        text1_surface = font.render(user_text1, True, (255, 255, 255))
+        screen.blit(text1_surface, input1_rect)
+        input1_rect.w = max(50, text1_surface.get_width())
+        input1_rect.h = text1_surface.get_height()
+        input1_rect.center = (400,330)
+        pygame.draw.rect(screen, color2, input2_rect)
+        text2_surface = font.render(user_text2, True, (255, 255, 255))
+        screen.blit(text2_surface, input2_rect)
+        input2_rect.w = max(50, text2_surface.get_width())
+        input2_rect.h = text2_surface.get_height()
+        input2_rect.center = (400,460)
         screen.blit(heading, heading_rect)
         screen.blit(text0, text0_rect)
+        screen.blit(text1, text1_rect)
+        screen.blit(text2, text2_rect)
         screen.blit(befs, befs_rect)
         screen.blit(bfs, bfs_rect)
         screen.blit(befsdemo, befsdemo_rect)
