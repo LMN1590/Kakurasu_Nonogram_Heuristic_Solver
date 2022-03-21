@@ -238,23 +238,23 @@ def demo_page(size,demo):
     image.append(pygame.image.load('./image/quit.png'))
     image.append(pygame.image.load('./image/forward.png'))
     image.append(pygame.image.load('./image/backward.png'))
+    image.append(pygame.image.load('./image/control.png'))
     image[0] = pygame.transform.scale(image[0],(130,130))
     image[1] = pygame.transform.scale(image[1],(130,130))
     image[2] = pygame.transform.scale(image[2],(130,130))
     image[3] = pygame.transform.scale(image[3],(130,130))
+    image[4] = pygame.transform.scale(image[4],(130,130))
     image_rect = []
     image_rect.append(image[0].get_rect())
     image_rect.append(image[1].get_rect())
     image_rect.append(image[2].get_rect())
     image_rect.append(image[3].get_rect())
+    image_rect.append(image[4].get_rect())
     image_rect[0].center = (65,550)
     image_rect[1].center = (735,550)
     image_rect[2].center = (735,300)
     image_rect[3].center = (65,300)
-    control_theme = pygame.image.load('./image/control.png')
-    control_theme = pygame.transform.scale(control_theme,(130,130))
-    control_theme_rect = control_theme.get_rect()
-    control_theme_rect.center = (400,550)
+    image_rect[4].center = (400,550)
     current_step = 0
     if len(demo)!=0:
         manual = True
@@ -272,14 +272,14 @@ def demo_page(size,demo):
                         if current_step != len(demo)-1: current_step+=1
                     if image_rect[3].collidepoint(event.pos) and manual:
                         if current_step != 0: current_step-=1
-                    if control_theme_rect.collidepoint(event.pos):
+                    if image_rect[4].collidepoint(event.pos):
                         manual = not manual
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT and manual:
                         if current_step != len(demo)-1: current_step+=1
                     if event.key == pygame.K_LEFT and manual:
                         if current_step != 0: current_step-=1
-            screen.blit(control_theme, control_theme_rect)
+            screen.blit(image[4], image_rect[4])
             if manual:
                 control = font[1].render('Auto',True,(0,0,0))
                 control_rect = control.get_rect()
