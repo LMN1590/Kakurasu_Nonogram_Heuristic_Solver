@@ -45,7 +45,7 @@ def welcome_page():
     color = [color_passive,color_passive,color_passive]
     active = [False,False,False]
     user_text = ['','','']
-    check =[True,True]
+    check = [True,True]
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -113,24 +113,25 @@ def welcome_page():
         else: color[1] = color_passive
         if active[2]: color[2] = color_active
         else: color[2] = color_passive
+        text_surface = []
+        text_surface.append(font[1].render(user_text[0], True, (255, 255, 255)))
+        text_surface.append(font[1].render(user_text[1], True, (255, 255, 255)))
+        text_surface.append(font[1].render(user_text[2], True, (255, 255, 255)))
         pygame.draw.rect(screen, color[0], input_rect[0])
-        text0_surface = font[1].render(user_text[0], True, (255, 255, 255))
-        screen.blit(text0_surface, input_rect[0])
-        input_rect[0].w = max(50, text0_surface.get_width())
-        input_rect[0].h = text0_surface.get_height()
+        input_rect[0].w = max(50, text_surface[0].get_width())
+        input_rect[0].h = text_surface[0].get_height()
         input_rect[0].center = (400,200)
         pygame.draw.rect(screen, color[1], input_rect[1])
-        text1_surface = font[1].render(user_text[1], True, (255, 255, 255))
-        screen.blit(text1_surface, input_rect[1])
-        input_rect[1].w = max(50, text1_surface.get_width())
-        input_rect[1].h = text1_surface.get_height()
+        input_rect[1].w = max(50, text_surface[1].get_width())
+        input_rect[1].h = text_surface[1].get_height()
         input_rect[1].center = (400,330)
         pygame.draw.rect(screen, color[2], input_rect[2])
-        text2_surface = font[1].render(user_text[2], True, (255, 255, 255))
-        screen.blit(text2_surface, input_rect[2])
-        input_rect[2].w = max(50, text2_surface.get_width())
-        input_rect[2].h = text2_surface.get_height()
+        input_rect[2].w = max(50, text_surface[2].get_width())
+        input_rect[2].h = text_surface[2].get_height()
         input_rect[2].center = (400,460)
+        screen.blit(text_surface[0], input_rect[0])
+        screen.blit(text_surface[1], input_rect[1])
+        screen.blit(text_surface[2], input_rect[2])
         screen.blit(heading, heading_rect)
         screen.blit(text[0], text_rect[0])
         screen.blit(text[1], text_rect[1])
@@ -147,24 +148,27 @@ def solution_page(size,solution):
     heading = font[0].render('Solution',True,(255,255,255))
     heading_rect=heading.get_rect()
     heading_rect.center = (400,50)
-    home = pygame.image.load('./image/home.png')
-    home = pygame.transform.scale(home,(130,130))
-    home_rect = home.get_rect()
-    home_rect.center = (65,550)
-    quit = pygame.image.load('./image/quit.png')
-    quit = pygame.transform.scale(quit,(130,130))
-    quit_rect = quit.get_rect()
-    quit_rect.center = (735,550)
+    image = []
+    image.append(pygame.image.load('./image/home.png'))
+    image.append(pygame.image.load('./image/quit.png'))
+    image.append(pygame.image.load('./image/forward.png'))
+    image.append(pygame.image.load('./image/backward.png'))
+    image[0] = pygame.transform.scale(image[0],(130,130))
+    image[1] = pygame.transform.scale(image[1],(130,130))
+    image[2] = pygame.transform.scale(image[2],(130,130))
+    image[3] = pygame.transform.scale(image[3],(130,130))
+    image_rect = []
+    image_rect.append(image[0].get_rect())
+    image_rect.append(image[1].get_rect())
+    image_rect.append(image[2].get_rect())
+    image_rect.append(image[3].get_rect())
+    image_rect[0].center = (65,550)
+    image_rect[1].center = (735,550)
+    image_rect[2].center = (735,300)
+    image_rect[3].center = (65,300)
     current_step = 0
     if len(solution)!=0:
-        forward = pygame.image.load('./image/forward.png')
-        forward = pygame.transform.scale(forward,(130,130))
-        forward_rect = forward.get_rect()
-        forward_rect.center = (735,300)
-        backward = pygame.image.load('./image/backward.png')
-        backward = pygame.transform.scale(backward,(130,130))
-        backward_rect = forward.get_rect()
-        backward_rect.center = (65,300)
+        
         while True:
             screen.fill((0,0,0))
             surface = pygame.Surface((size*35,size*35))
@@ -173,12 +177,12 @@ def solution_page(size,solution):
                     pygame.quit()
                     return False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if forward_rect.collidepoint(event.pos):
+                    if image_rect[0].collidepoint(event.pos): return True
+                    if image_rect[1].collidepoint(event.pos): return False
+                    if image_rect[2].collidepoint(event.pos):
                         if current_step != len(solution)-1: current_step+=1
-                    if backward_rect.collidepoint(event.pos):
+                    if image_rect[3].collidepoint(event.pos):
                         if current_step != 0: current_step-=1
-                    if home_rect.collidepoint(event.pos): return True
-                    if quit_rect.collidepoint(event.pos): return False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
                         if current_step != len(solution)-1: current_step+=1
@@ -199,10 +203,10 @@ def solution_page(size,solution):
             surface = pygame.transform.scale(surface,(300,300))
             surface_rect=surface.get_rect()
             surface_rect.center = (400,350)
-            if current_step != len(solution)-1: screen.blit(forward,forward_rect)
-            if current_step != 0: screen.blit(backward,backward_rect)
-            screen.blit(home, home_rect)
-            screen.blit(quit, quit_rect)
+            screen.blit(image[0], image_rect[0])
+            screen.blit(image[1], image_rect[1])
+            if current_step != len(solution)-1: screen.blit(image[2], image_rect[2])
+            if current_step != 0: screen.blit(image[3], image_rect[3])
             screen.blit(surface,surface_rect)
             pygame.display.flip()
     else:
@@ -211,8 +215,8 @@ def solution_page(size,solution):
         nosol_rect.center = (400,300)
         screen.blit(nosol,nosol_rect)
         screen.blit(heading, heading_rect)
-        screen.blit(home, home_rect)
-        screen.blit(quit, quit_rect)
+        screen.blit(image[0], image_rect[0])
+        screen.blit(image[1], image_rect[1])
         pygame.display.flip()
         while True:
             for event in pygame.event.get():
@@ -220,8 +224,8 @@ def solution_page(size,solution):
                     pygame.quit()
                     return False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if home_rect.collidepoint(event.pos): return True
-                    if quit_rect.collidepoint(event.pos): return False
+                    if image_rect[0].collidepoint(event.pos): return True
+                    if image_rect[1].collidepoint(event.pos): return False
 def demo_page(size,demo):
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption('Kukarasu Ultimate Solver')
@@ -229,28 +233,30 @@ def demo_page(size,demo):
     heading = font[0].render('Visualization',True,(255,255,255))
     heading_rect=heading.get_rect()
     heading_rect.center = (400,50)
-    home = pygame.image.load('./image/home.png')
-    home = pygame.transform.scale(home,(130,130))
-    home_rect = home.get_rect()
-    home_rect.center = (65,550)
-    quit = pygame.image.load('./image/quit.png')
-    quit = pygame.transform.scale(quit,(130,130))
-    quit_rect = quit.get_rect()
-    quit_rect.center = (735,550)
+    image = []
+    image.append(pygame.image.load('./image/home.png'))
+    image.append(pygame.image.load('./image/quit.png'))
+    image.append(pygame.image.load('./image/forward.png'))
+    image.append(pygame.image.load('./image/backward.png'))
+    image[0] = pygame.transform.scale(image[0],(130,130))
+    image[1] = pygame.transform.scale(image[1],(130,130))
+    image[2] = pygame.transform.scale(image[2],(130,130))
+    image[3] = pygame.transform.scale(image[3],(130,130))
+    image_rect = []
+    image_rect.append(image[0].get_rect())
+    image_rect.append(image[1].get_rect())
+    image_rect.append(image[2].get_rect())
+    image_rect.append(image[3].get_rect())
+    image_rect[0].center = (65,550)
+    image_rect[1].center = (735,550)
+    image_rect[2].center = (735,300)
+    image_rect[3].center = (65,300)
     control_theme = pygame.image.load('./image/control.png')
     control_theme = pygame.transform.scale(control_theme,(130,130))
     control_theme_rect = control_theme.get_rect()
     control_theme_rect.center = (400,550)
     current_step = 0
     if len(demo)!=0:
-        forward = pygame.image.load('./image/forward.png')
-        forward = pygame.transform.scale(forward,(130,130))
-        forward_rect = forward.get_rect()
-        forward_rect.center = (735,300)
-        backward = pygame.image.load('./image/backward.png')
-        backward = pygame.transform.scale(backward,(130,130))
-        backward_rect = forward.get_rect()
-        backward_rect.center = (65,300)
         manual = True
         while True:
             screen.fill((0,0,0))
@@ -260,14 +266,14 @@ def demo_page(size,demo):
                     pygame.quit()
                     return False
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if forward_rect.collidepoint(event.pos) and manual:
+                    if image_rect[0].collidepoint(event.pos): return True
+                    if image_rect[1].collidepoint(event.pos): return False
+                    if image_rect[2].collidepoint(event.pos) and manual:
                         if current_step != len(demo)-1: current_step+=1
-                    if backward_rect.collidepoint(event.pos) and manual:
+                    if image_rect[3].collidepoint(event.pos) and manual:
                         if current_step != 0: current_step-=1
                     if control_theme_rect.collidepoint(event.pos):
                         manual = not manual
-                    if home_rect.collidepoint(event.pos): return True
-                    if quit_rect.collidepoint(event.pos): return False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT and manual:
                         if current_step != len(demo)-1: current_step+=1
@@ -300,13 +306,30 @@ def demo_page(size,demo):
             surface = pygame.transform.scale(surface,(300,300))
             surface_rect=surface.get_rect()
             surface_rect.center = (400,350)
-            if current_step != len(demo)-1: screen.blit(forward,forward_rect)
-            if current_step != 0: screen.blit(backward,backward_rect)
-            screen.blit(home, home_rect)
-            screen.blit(quit, quit_rect)
+            screen.blit(image[0], image_rect[0])
+            screen.blit(image[1], image_rect[1])
+            if current_step != len(demo)-1: screen.blit(image[2], image_rect[2])
+            if current_step != 0: screen.blit(image[3], image_rect[3])
             screen.blit(surface,surface_rect)
             pygame.display.flip()
             if not manual: pygame.time.delay(min(int(10000/len(demo)),500))
+    else:
+        nosol = font.render("No solution is found",True,(255,255,255))
+        nosol_rect = nosol.get_rect()
+        nosol_rect.center = (400,300)
+        screen.blit(nosol,nosol_rect)
+        screen.blit(heading, heading_rect)
+        screen.blit(image[0], image_rect[0])
+        screen.blit(image[1], image_rect[1])
+        pygame.display.flip()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if image_rect[0].collidepoint(event.pos): return True
+                    if image_rect[1].collidepoint(event.pos): return False
 def main():
     pygame.init()
     loop = True
