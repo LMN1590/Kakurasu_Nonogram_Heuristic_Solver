@@ -62,7 +62,10 @@ def welcome_page():
     active = [False,False,False,False]
     user_text = ['','','','']
     check = [True,True,True,True]
+    horizontal_run = []
+    vertical_run = []
     maxlength = [10,30]
+    current_step = [0,0]
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -78,25 +81,25 @@ def welcome_page():
                 if input_rect[3].collidepoint(event.pos): active[3] = True
                 else: active[3] = False
                 if image_rect[0].collidepoint(event.pos):
-                    if user_text[0] == '': check[0]=False
-                    elif user_text[1] == '': check[1]=False
+                    if user_text[0] == '': check[0] = False
+                    elif user_text[1] == '': check[1] = False
                     else:
                         check[0], check[1] = True, True
+                        if  
                 if image_rect[1].collidepoint(event.pos):
-                    if user_text[0] == '': check[0]=False
-                    elif user_text[1] == '': check[1]=False
-                    else:
-                        check[0], check[1] = True, True
+                    pass
                 if image_rect[2].collidepoint(event.pos):
-                    if user_text[0] == '': check[0]=False
-                    elif user_text[1] == '': check[1]=False
-                    else:
-                        check[0], check[1] = True, True
+                    pass
                 if image_rect[3].collidepoint(event.pos):
-                    if user_text[0] == '': check[0]=False
-                    elif user_text[1] == '': check[1]=False
-                    else:
-                        check[0], check[1] = True, True
+                    pass
+                if image_rect[4].collidepoint(event.pos):
+                    pass
+                if image_rect[5].collidepoint(event.pos):
+                    pass
+                if image_rect[6].collidepoint(event.pos):
+                    pass
+                if image_rect[7].collidepoint(event.pos):
+                    pass
             if event.type == pygame.KEYDOWN:
                 if active[0]:
                     if event.key == pygame.K_RETURN: active[0] = False

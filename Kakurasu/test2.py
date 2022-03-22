@@ -1,8 +1,9 @@
 import BestFSKakurasu,BFSKakurasu
 import random, time
-size = 4
+import tracemalloc
+size = 5
 total = [0,0]
-for i in range(500):
+for i in range(1000):
     test_row = []
     for row in range(size):
         test_col = []
@@ -26,6 +27,5 @@ for i in range(500):
     BestFSKakurasu.main(size,col_run,row_run)
     stop = time.time()
     total[1] += stop - start
-    print(i+1)
-print(total[0]/500)
-print(total[1]/500)
+print(total[0]/1000)
+print(total[1]/1000)
