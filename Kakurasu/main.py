@@ -45,7 +45,8 @@ def welcome_page():
     color = [color_passive,color_passive,color_passive]
     active = [False,False,False]
     user_text = ['','','']
-    check = [True,True]
+    check = [True,True,True]
+    maxlength = 50
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -59,30 +60,41 @@ def welcome_page():
                 if input_rect[2].collidepoint(event.pos): active[2] = True
                 else: active[2] = False
                 if image_rect[0].collidepoint(event.pos):
-                    check[0],check[1] = True,True
-                    if len(user_text[1].split()) != int(user_text[0]): check[0] = False
-                    else: check[0] = True
-                    if len(user_text[2].split()) != int(user_text[0]): check[1] = False
-                    else: check[1] = True
-                    if check[0] and check[1]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),0,True
+                    if user_text[0] == '': check[0]=False
+                    else:
+                        check[0] = True
+                        if len(user_text[1].split()) != int(user_text[0]): check[1] = False
+                        else: check[1] = True
+                        if len(user_text[2].split()) != int(user_text[0]): check[2] = False
+                        else: check[2] = True
+                        if check[1] and check[2]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),0,True
                 if image_rect[1].collidepoint(event.pos):
-                    if len(user_text[1].split()) != int(user_text[0]): check[0] = False
-                    else: check[0] = True
-                    if len(user_text[2].split()) != int(user_text[0]): check[1] = False
-                    else: check[1] = True
-                    if check[0] and check[1]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),1,True
+                    if user_text[0] == '': check[0]=False
+                    else:
+                        check[0] = True
+                        if len(user_text[1].split()) != int(user_text[0]): check[1] = False
+                        else: check[1] = True
+                        if len(user_text[2].split()) != int(user_text[0]): check[2] = False
+                        else: check[2] = True
+                        if check[1] and check[2]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),1,True
                 if image_rect[2].collidepoint(event.pos):
-                    if len(user_text[1].split()) != int(user_text[0]): check[0] = False
-                    else: check[0] = True
-                    if len(user_text[2].split()) != int(user_text[0]): check[1] = False
-                    else: check[1] = True
-                    if check[0] and check[1]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),2,True
+                    if user_text[0] == '': check[0]=False
+                    else:
+                        check[0] = True
+                        if len(user_text[1].split()) != int(user_text[0]): check[1] = False
+                        else: check[1] = True
+                        if len(user_text[2].split()) != int(user_text[0]): check[2] = False
+                        else: check[2] = True
+                        if check[1] and check[2]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),2,True
                 if image_rect[3].collidepoint(event.pos):
-                    if len(user_text[1].split()) != int(user_text[0]): check[0] = False
-                    else: check[0] = True
-                    if len(user_text[2].split()) != int(user_text[0]): check[1] = False
-                    else: check[1] = True
-                    if check[0] and check[1]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),4,True
+                    if user_text[0] == '': check[0]=False
+                    else:
+                        check[0] = True
+                        if len(user_text[1].split()) != int(user_text[0]): check[1] = False
+                        else: check[1] = True
+                        if len(user_text[2].split()) != int(user_text[0]): check[2] = False
+                        else: check[2] = True
+                        if check[1] and check[2]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),4,True
             if event.type == pygame.KEYDOWN:
                 if active[0]:
                     if event.key == pygame.K_RETURN: active[0] = False
@@ -98,11 +110,16 @@ def welcome_page():
                     elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_SPACE]:user_text[2] += event.unicode
         screen.fill((0, 0, 0))
         if not check[0]:
+            error0 = font[1].render('Missing input for size',True,(255,0,0))
+            error0_rect = error0.get_rect()
+            error0_rect.center = (400,230)
+            screen.blit(error0,error0_rect)
+        if not check[1]:
             error1 = font[1].render('Wrong number of inputs on column',True,(255,0,0))
             error1_rect = error1.get_rect()
             error1_rect.center = (400,370)
             screen.blit(error1,error1_rect)
-        if not check[1]:
+        if not check[2]:
             error2 = font[1].render('Wrong number of inputs on row',True,(255,0,0))
             error2_rect = error2.get_rect()
             error2_rect.center = (400,500)
@@ -114,9 +131,12 @@ def welcome_page():
         if active[2]: color[2] = color_active
         else: color[2] = color_passive
         text_surface = []
-        text_surface.append(font[1].render(user_text[0], True, (255, 255, 255)))
-        text_surface.append(font[1].render(user_text[1], True, (255, 255, 255)))
-        text_surface.append(font[1].render(user_text[2], True, (255, 255, 255)))
+        if len(user_text[0])>maxlength: text_surface.append(font[1].render(user_text[0][len(user_text[0])-maxlength-1:-1], True, (255, 255, 255)))
+        else: text_surface.append(font[1].render(user_text[0], True, (255, 255, 255)))
+        if len(user_text[1])>maxlength: text_surface.append(font[1].render(user_text[1][len(user_text[1])-maxlength-1:-1], True, (255, 255, 255)))
+        else: text_surface.append(font[1].render(user_text[1], True, (255, 255, 255)))
+        if len(user_text[2])>maxlength: text_surface.append(font[1].render(user_text[2][len(user_text[2])-maxlength-1:-1], True, (255, 255, 255)))
+        else: text_surface.append(font[1].render(user_text[2], True, (255, 255, 255)))
         pygame.draw.rect(screen, color[0], input_rect[0])
         input_rect[0].w = max(50, text_surface[0].get_width())
         input_rect[0].h = text_surface[0].get_height()
@@ -168,7 +188,6 @@ def solution_page(size,solution):
     image_rect[3].center = (65,300)
     current_step = 0
     if len(solution)!=0:
-        
         while True:
             screen.fill((0,0,0))
             surface = pygame.Surface((size*35,size*35))
