@@ -65,8 +65,16 @@ def welcome_page():
                         check[0] = True
                         if len(user_text[1].split()) != int(user_text[0]): check[1] = False
                         else: check[1] = True
+                        for i in list(map(int,user_text[1].split())):
+                            if i>int(user_text[0])*(int(user_text[0])+1)/2:
+                                check[1] = False
+                                break
                         if len(user_text[2].split()) != int(user_text[0]): check[2] = False
                         else: check[2] = True
+                        for i in list(map(int,user_text[2].split())):
+                            if i>int(user_text[0])*(int(user_text[0])+1)/2:
+                                check[2] = False
+                                break
                         if check[1] and check[2]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),0,True
                 if image_rect[1].collidepoint(event.pos):
                     if user_text[0] == '': check[0]=False
@@ -74,8 +82,16 @@ def welcome_page():
                         check[0] = True
                         if len(user_text[1].split()) != int(user_text[0]): check[1] = False
                         else: check[1] = True
+                        for i in list(map(int,user_text[1].split())):
+                            if i>int(user_text[0])*(int(user_text[0])+1)/2:
+                                check[1] = False
+                                break
                         if len(user_text[2].split()) != int(user_text[0]): check[2] = False
                         else: check[2] = True
+                        for i in list(map(int,user_text[2].split())):
+                            if i>int(user_text[0])*(int(user_text[0])+1)/2:
+                                check[2] = False
+                                break
                         if check[1] and check[2]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),1,True
                 if image_rect[2].collidepoint(event.pos):
                     if user_text[0] == '': check[0]=False
@@ -83,8 +99,16 @@ def welcome_page():
                         check[0] = True
                         if len(user_text[1].split()) != int(user_text[0]): check[1] = False
                         else: check[1] = True
+                        for i in list(map(int,user_text[1].split())):
+                            if i>int(user_text[0])*(int(user_text[0])+1)/2:
+                                check[1] = False
+                                break
                         if len(user_text[2].split()) != int(user_text[0]): check[2] = False
                         else: check[2] = True
+                        for i in list(map(int,user_text[2].split())):
+                            if i>int(user_text[0])*(int(user_text[0])+1)/2:
+                                check[2] = False
+                                break
                         if check[1] and check[2]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),2,True
                 if image_rect[3].collidepoint(event.pos):
                     if user_text[0] == '': check[0]=False
@@ -92,8 +116,16 @@ def welcome_page():
                         check[0] = True
                         if len(user_text[1].split()) != int(user_text[0]): check[1] = False
                         else: check[1] = True
+                        for i in list(map(int,user_text[1].split())):
+                            if i>int(user_text[0])*(int(user_text[0])+1)/2:
+                                check[1] = False
+                                break
                         if len(user_text[2].split()) != int(user_text[0]): check[2] = False
                         else: check[2] = True
+                        for i in list(map(int,user_text[2].split())):
+                            if i>int(user_text[0])*(int(user_text[0])+1)/2:
+                                check[2] = False
+                                break
                         if check[1] and check[2]: return int(user_text[0]),list(map(int,user_text[1].split())),list(map(int,user_text[2].split())),4,True
             if event.type == pygame.KEYDOWN:
                 if active[0]:
@@ -115,12 +147,12 @@ def welcome_page():
             error0_rect.center = (400,230)
             screen.blit(error0,error0_rect)
         if not check[1]:
-            error1 = font[1].render('Wrong number of inputs on column',True,(255,0,0))
-            error1_rect = error1.get_rect()
-            error1_rect.center = (400,370)
-            screen.blit(error1,error1_rect)
+            error = font[1].render('Wrong input on column',True,(255,0,0))
+            error_rect = error.get_rect()
+            error_rect.center = (400,370)
+            screen.blit(error,error_rect)
         if not check[2]:
-            error2 = font[1].render('Wrong number of inputs on row',True,(255,0,0))
+            error2 = font[1].render('Wrong input on row',True,(255,0,0))
             error2_rect = error2.get_rect()
             error2_rect.center = (400,500)
             screen.blit(error2,error2_rect)

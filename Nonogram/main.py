@@ -120,9 +120,36 @@ def welcome_page():
                             if i!=0: user_text[1] += ' '
                             user_text[1] += str(vertical_run[current_step[0]][i])
                 if image_rect[6].collidepoint(event.pos):
-                    pass
+                    if user_text[0] == '': check[0], check[2] = False, True
+                    elif user_text[2] == '': check[0], check[2] = True, False
+                    else:
+                        check[0], check[2] = True, True
+                        if current_step[1] == int(user_text[0])-1: pass
+                        elif len(horizontal_run) == current_step[1]:
+                            horizontal_run.append(list(map(int,user_text[2].split())))
+                            current_step[1]+=1
+                            user_text[2]=''
+                        else:
+                            horizontal_run[current_step[1]] = list(map(int,user_text[2].split()))
+                            current_step[1] += 1
+                            user_text[2] = ''
+                            if len(horizontal_run) != current_step[1]:
+                                for i in range(len(horizontal_run[current_step[1]])):
+                                    if i!=0: user_text[1] += ' '
+                                    user_text[2] += str(horizontal_run[current_step[1]][i])
                 if image_rect[7].collidepoint(event.pos):
-                    pass
+                    if user_text[0] == '': check[2] = True
+                    elif current_step[1] == 0: check[2] = True
+                    else:
+                        check[2] = True
+                        if user_text[2] != '':
+                            if len(horizontal_run) == current_step[1]: horizontal_run.append(list(map(int,user_text[2].split())))
+                            else: horizontal_run[current_step[1]] = list(map(int,user_text[2].split()))
+                        current_step[1] -= 1
+                        user_text[2] = ''
+                        for i in range(len(horizontal_run[current_step[1]])):
+                            if i!=0: user_text[2] += ' '
+                            user_text[2] += str(horizontal_run[current_step[1]][i])
             if event.type == pygame.KEYDOWN:
                 if active[0]:
                     if event.key == pygame.K_RETURN: active[0] = False
@@ -138,20 +165,20 @@ def welcome_page():
                     elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_SPACE]:user_text[2] += event.unicode
         screen.fill((0, 0, 0))
         if not check[0]:
-            error0 = font[1].render('Missing input for size',True,(255,0,0))
-            error0_rect = error0.get_rect()
-            error0_rect.center = (400,230)
-            screen.blit(error0,error0_rect)
+            error = font[1].render('Missing input for size',True,(255,0,0))
+            error_rect = error.get_rect()
+            error_rect.center = (400,230)
+            screen.blit(error,error_rect)
         if not check[1]:
-            error1 = font[1].render('Wrong number or missing of inputs on column',True,(255,0,0))
-            error1_rect = error1.get_rect()
-            error1_rect.center = (400,370)
-            screen.blit(error1,error1_rect)
+            error = font[1].render('Wrong number or missing of inputs on column',True,(255,0,0))
+            error_rect = error.get_rect()
+            error_rect.center = (400,370)
+            screen.blit(error,error_rect)
         if not check[2]:
-            error2 = font[1].render('Wrong number of inputs on row',True,(255,0,0))
-            error2_rect = error2.get_rect()
-            error2_rect.center = (400,500)
-            screen.blit(error2,error2_rect)
+            error = font[1].render('Wrong number or mising of inputs on row',True,(255,0,0))
+            error_rect = error.get_rect()
+            error_rect.center = (400,500)
+            screen.blit(error,error_rect)
         if active[0]: color[0] = color_active
         else: color[0] = color_passive
         if active[1]: color[1] = color_active
