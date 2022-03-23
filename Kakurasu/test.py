@@ -1,23 +1,21 @@
 import BestFSKakurasu,BFSKakurasu
 import random, time
-size = 4
+size = 5
 total = [0,0]
 for i in range(500):
-    test_row = []
-    for row in range(size):
-        test_col = []
-        for col in range(size):
-            test_col.append(random.choice([True, False]))
-        test_row.append(test_col)
+    import numpy as np
+    test_row=np.random.randint(0,2,(size,size))
     col_run, row_run = [], []
     for run in range(size):
         col_run.append(0)
         row_run.append(0)
     for row in range(size):
         for col in range(size):
-            if test_row[row][col] == True:
-                col_run[col]+=(col+1)*(row+1)
-                row_run[row]+=(col+1)*(row+1)
+            if test_row[row][col] == 1:
+                col_run[col]+=(row+1)
+                row_run[row]+=(col+1)
+    print(col_run)
+    print(row_run)
     start = time.time()
     BFSKakurasu.main(size,col_run,row_run)
     stop = time.time()
