@@ -21,7 +21,6 @@ def welcome_page():
     input_rect.append(pygame.Rect(200,200,0,0))
     input_rect.append(pygame.Rect(200,200,0,0))
     input_rect.append(pygame.Rect(200,200,0,0))
-    input_rect.append(pygame.Rect(200,200,0,0))
     image = []
     image.append(pygame.image.load('./image/befs.png'))
     image.append(pygame.image.load('./image/bfs.png'))
@@ -58,10 +57,10 @@ def welcome_page():
     image_rect[7].center = (150,460)
     color_active = pygame.Color('lightskyblue3')
     color_passive = pygame.Color('chartreuse4')
-    color = [color_passive,color_passive,color_passive,color_passive]
-    active = [False,False,False,False]
-    user_text = ['','','','']
-    check = [True,True,True,True]
+    color = [color_passive,color_passive,color_passive]
+    active = [False,False,False]
+    user_text = ['','','']
+    check = [True,True,True]
     horizontal_run = []
     vertical_run = []
     maxlength = [10,30]
@@ -78,14 +77,11 @@ def welcome_page():
                 else: active[1] = False
                 if input_rect[2].collidepoint(event.pos): active[2] = True
                 else: active[2] = False
-                if input_rect[3].collidepoint(event.pos): active[3] = True
-                else: active[3] = False
                 if image_rect[0].collidepoint(event.pos):
                     if user_text[0] == '': check[0] = False
                     elif user_text[1] == '': check[1] = False
                     else:
                         check[0], check[1] = True, True
-                        if  
                 if image_rect[1].collidepoint(event.pos):
                     pass
                 if image_rect[2].collidepoint(event.pos):
@@ -93,9 +89,36 @@ def welcome_page():
                 if image_rect[3].collidepoint(event.pos):
                     pass
                 if image_rect[4].collidepoint(event.pos):
-                    pass
+                    if user_text[0] == '': check[0], check[1] = False, True
+                    elif user_text[1] == '': check[0], check[1] = True, False
+                    else:
+                        check[0], check[1] = True, True
+                        if current_step[0] == int(user_text[0])-1: pass
+                        elif len(vertical_run) == current_step[0]:
+                            vertical_run.append(list(map(int,user_text[1].split())))
+                            current_step[0]+=1
+                            user_text[1]=''
+                        else:
+                            vertical_run[current_step[0]] = list(map(int,user_text[1].split()))
+                            current_step[0] += 1
+                            user_text[1] = ''
+                            if len(vertical_run) != current_step[0]:
+                                for i in range(len(vertical_run[current_step[0]])):
+                                    if i!=0: user_text[1] += ' '
+                                    user_text[1] += str(vertical_run[current_step[0]][i])
                 if image_rect[5].collidepoint(event.pos):
-                    pass
+                    if user_text[0] == '': check[1] = True
+                    elif current_step[0] == 0: check[1] = True
+                    else:
+                        check[1] = True
+                        if user_text[1] != '':
+                            if len(vertical_run) == current_step[0]: vertical_run.append(list(map(int,user_text[1].split())))
+                            else: vertical_run[current_step[0]] = list(map(int,user_text[1].split()))
+                        current_step[0] -= 1
+                        user_text[1] = ''
+                        for i in range(len(vertical_run[current_step[0]])):
+                            if i!=0: user_text[1] += ' '
+                            user_text[1] += str(vertical_run[current_step[0]][i])
                 if image_rect[6].collidepoint(event.pos):
                     pass
                 if image_rect[7].collidepoint(event.pos):
@@ -105,30 +128,26 @@ def welcome_page():
                     if event.key == pygame.K_RETURN: active[0] = False
                     elif event.key == pygame.K_BACKSPACE: user_text[0] = user_text[0][:-1]
                     elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9]:user_text[0] += event.unicode
-                if active[1]:
+                elif active[1]:
                     if event.key == pygame.K_RETURN: active[1] = False
                     elif event.key == pygame.K_BACKSPACE: user_text[1] = user_text[1][:-1]
-                    elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9]:user_text[1] += event.unicode
+                    elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_SPACE]:user_text[1] += event.unicode
                 elif active[2]:
                     if event.key == pygame.K_RETURN: active[2] = False
                     elif event.key == pygame.K_BACKSPACE: user_text[2] = user_text[2][:-1]
                     elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_SPACE]:user_text[2] += event.unicode
-                elif active[3]:
-                    if event.key == pygame.K_RETURN: active[3] = False
-                    elif event.key == pygame.K_BACKSPACE: user_text[3] = user_text[3][:-1]
-                    elif event.key in [pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_SPACE]:user_text[3] += event.unicode
         screen.fill((0, 0, 0))
-        if not check[0] or not check[1]:
+        if not check[0]:
             error0 = font[1].render('Missing input for size',True,(255,0,0))
             error0_rect = error0.get_rect()
             error0_rect.center = (400,230)
             screen.blit(error0,error0_rect)
-        if not check[2]:
-            error1 = font[1].render('Wrong number of inputs on column',True,(255,0,0))
+        if not check[1]:
+            error1 = font[1].render('Wrong number or missing of inputs on column',True,(255,0,0))
             error1_rect = error1.get_rect()
             error1_rect.center = (400,370)
             screen.blit(error1,error1_rect)
-        if not check[3]:
+        if not check[2]:
             error2 = font[1].render('Wrong number of inputs on row',True,(255,0,0))
             error2_rect = error2.get_rect()
             error2_rect.center = (400,500)
@@ -139,37 +158,28 @@ def welcome_page():
         else: color[1] = color_passive
         if active[2]: color[2] = color_active
         else: color[2] = color_passive
-        if active[3]: color[3] = color_active
-        else: color[3] = color_passive
         text_surface = []
         if len(user_text[0])>maxlength[0]: text_surface.append(font[1].render(user_text[0][len(user_text[0])-maxlength[0]-1:-1], True, (255, 255, 255)))
         else: text_surface.append(font[1].render(user_text[0], True, (255, 255, 255)))
-        if len(user_text[1])>maxlength[0]: text_surface.append(font[1].render(user_text[1][len(user_text[1])-maxlength[0]-1:-1], True, (255, 255, 255)))
+        if len(user_text[1])>maxlength[1]: text_surface.append(font[1].render(user_text[1][len(user_text[1])-maxlength[1]-1:-1], True, (255, 255, 255)))
         else: text_surface.append(font[1].render(user_text[1], True, (255, 255, 255)))
         if len(user_text[2])>maxlength[1]: text_surface.append(font[1].render(user_text[2][len(user_text[2])-maxlength[1]-1:-1], True, (255, 255, 255)))
         else: text_surface.append(font[1].render(user_text[2], True, (255, 255, 255)))
-        if len(user_text[3])>maxlength[1]: text_surface.append(font[1].render(user_text[3][len(user_text[3])-maxlength[1]-1:-1], True, (255, 255, 255)))
-        else: text_surface.append(font[1].render(user_text[3], True, (255, 255, 255)))
         pygame.draw.rect(screen, color[0], input_rect[0])
         input_rect[0].w = max(50, text_surface[0].get_width())
         input_rect[0].h = text_surface[0].get_height()
-        input_rect[0].center = (500,200)
+        input_rect[0].center = (400,200)
         pygame.draw.rect(screen, color[1], input_rect[1])
         input_rect[1].w = max(50, text_surface[1].get_width())
         input_rect[1].h = text_surface[1].get_height()
-        input_rect[1].center = (300,200)
+        input_rect[1].center = (400,330)
         pygame.draw.rect(screen, color[2], input_rect[2])
         input_rect[2].w = max(50, text_surface[2].get_width())
         input_rect[2].h = text_surface[2].get_height()
-        input_rect[2].center = (400,330)
-        pygame.draw.rect(screen, color[3], input_rect[3])
-        input_rect[3].w = max(50, text_surface[3].get_width())
-        input_rect[3].h = text_surface[3].get_height()
-        input_rect[3].center = (400,460)
+        input_rect[2].center = (400,460)
         screen.blit(text_surface[0], input_rect[0])
         screen.blit(text_surface[1], input_rect[1])
         screen.blit(text_surface[2], input_rect[2])
-        screen.blit(text_surface[3], input_rect[3])
         screen.blit(heading, heading_rect)
         screen.blit(text[0], text_rect[0])
         screen.blit(text[1], text_rect[1])
@@ -178,10 +188,10 @@ def welcome_page():
         screen.blit(image[1], image_rect[1])
         screen.blit(image[2], image_rect[2])
         screen.blit(image[3], image_rect[3])
-        screen.blit(image[4], image_rect[4])
-        screen.blit(image[5], image_rect[5])
-        screen.blit(image[6], image_rect[6])
-        screen.blit(image[7], image_rect[7])
+        if current_step[0] <= len(vertical_run): screen.blit(image[4], image_rect[4])
+        if current_step[0] != 0: screen.blit(image[5], image_rect[5])
+        if current_step[1] <= len(horizontal_run): screen.blit(image[6], image_rect[6])
+        if current_step[1] != 0: screen.blit(image[7], image_rect[7])
         pygame.display.flip()
 def solution_page(size,solution):
     screen = pygame.display.set_mode((800, 600))
