@@ -1,5 +1,5 @@
 import pygame
-import Blind_search_nonogram,SimAnneal
+import BlindNonogram,AnnealingNonogram
 def welcome_page():
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption('Nonogram Ultimate Solver')
@@ -23,22 +23,20 @@ def welcome_page():
     input_rect.append(pygame.Rect(200,200,0,0))
     input_rect.append(pygame.Rect(200,200,0,0))
     image = []
-    image.append(pygame.image.load('./image/befs.png'))
-    image.append(pygame.image.load('./image/bfs.png'))
-    image.append(pygame.image.load('./image/befsdemo.png'))
-    image.append(pygame.image.load('./image/bfsdemo.png'))
+    image.append(pygame.image.load('./image/blind.png'))
+    image.append(pygame.image.load('./image/annealing.png'))
     image.append(pygame.image.load('./image/forward.png'))
     image.append(pygame.image.load('./image/backward.png'))
     image.append(pygame.image.load('./image/forward.png'))
     image.append(pygame.image.load('./image/backward.png'))
+    image.append(pygame.image.load('./image/delete.png'))
     image[0] = pygame.transform.scale(image[0],(130,130))
     image[1] = pygame.transform.scale(image[1],(130,130))
-    image[2] = pygame.transform.scale(image[2],(130,130))
-    image[3] = pygame.transform.scale(image[3],(130,130))
+    image[2] = pygame.transform.scale(image[2],(75,75))
+    image[3] = pygame.transform.scale(image[3],(75,75))
     image[4] = pygame.transform.scale(image[4],(75,75))
     image[5] = pygame.transform.scale(image[5],(75,75))
-    image[6] = pygame.transform.scale(image[6],(75,75))
-    image[7] = pygame.transform.scale(image[7],(75,75))
+    image[6] = pygame.transform.scale(image[6],(130,130))
     image_rect = []
     image_rect.append(image[0].get_rect())
     image_rect.append(image[1].get_rect())
@@ -47,15 +45,13 @@ def welcome_page():
     image_rect.append(image[4].get_rect())
     image_rect.append(image[5].get_rect())
     image_rect.append(image[6].get_rect())
-    image_rect.append(image[7].get_rect())
-    image_rect[0].center = (200,550)
-    image_rect[1].center = (600,550)
-    image_rect[2].center = (65,550)
-    image_rect[3].center = (735,550)
-    image_rect[4].center = (650,330)
-    image_rect[5].center = (150,330)
-    image_rect[6].center = (650,460)
-    image_rect[7].center = (150,460)
+    image_rect[0].center = (150,550)
+    image_rect[1].center = (650,550)
+    image_rect[2].center = (650,330)
+    image_rect[3].center = (150,330)
+    image_rect[4].center = (650,460)
+    image_rect[5].center = (150,460)
+    image_rect[6].center = (400,550)
     color_active = pygame.Color('lightskyblue3')
     color_passive = pygame.Color('chartreuse4')
     color = [color_passive,color_passive,color_passive]
@@ -70,15 +66,9 @@ def welcome_page():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return None,None,None,None,False
+                return None,None,None,0
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if input_rect[0].collidepoint(event.pos): active[0] = True
-                else: active[0] = False
-                if input_rect[1].collidepoint(event.pos): active[1] = True
-                else: active[1] = False
-                if input_rect[2].collidepoint(event.pos): active[2] = True
-                else: active[2] = False
-                if image_rect[0].collidepoint(event.pos) or image_rect[1].collidepoint(event.pos) or image_rect[2].collidepoint(event.pos) or image_rect[3].collidepoint(event.pos):
+                if image_rect[0].collidepoint(event.pos) or image_rect[1].collidepoint(event.pos):
                     if user_text[0] == '': check[0] = False
                     else:
                         check[0] = True
@@ -115,14 +105,10 @@ def welcome_page():
                         if len(horizontal_run) != int(user_text[0]): check[2]=False
                         if check[1] and check[2]:
                             if image_rect[0].collidepoint(event.pos):
-                                return int(user_text[0]),vertical_run,horizontal_run,0,True
+                                return int(user_text[0]),vertical_run,horizontal_run,1
                             if image_rect[1].collidepoint(event.pos):
-                                return int(user_text[0]),vertical_run,horizontal_run,1,True
-                            if image_rect[2].collidepoint(event.pos):
-                                return int(user_text[0]),vertical_run,horizontal_run,2,True
-                            if image_rect[3].collidepoint(event.pos):
-                                return int(user_text[0]),vertical_run,horizontal_run,3,True
-                if image_rect[4].collidepoint(event.pos):
+                                return int(user_text[0]),vertical_run,horizontal_run,2
+                if image_rect[2].collidepoint(event.pos):
                     if user_text[0] == '': check[0], check[1] = False, True
                     elif user_text[1] == '': check[0], check[1] = True, False
                     else:
@@ -140,7 +126,7 @@ def welcome_page():
                                 for i in range(len(vertical_run[current_step[0]])):
                                     if i!=0: user_text[1] += ' '
                                     user_text[1] += str(vertical_run[current_step[0]][i])
-                if image_rect[5].collidepoint(event.pos):
+                if image_rect[3].collidepoint(event.pos):
                     if user_text[0] == '': check[1] = True
                     elif current_step[0] == 0: check[1] = True
                     else:
@@ -153,7 +139,7 @@ def welcome_page():
                         for i in range(len(vertical_run[current_step[0]])):
                             if i!=0: user_text[1] += ' '
                             user_text[1] += str(vertical_run[current_step[0]][i])
-                if image_rect[6].collidepoint(event.pos):
+                if image_rect[4].collidepoint(event.pos):
                     if user_text[0] == '': check[0], check[2] = False, True
                     elif user_text[2] == '': check[0], check[2] = True, False
                     else:
@@ -171,7 +157,7 @@ def welcome_page():
                                 for i in range(len(horizontal_run[current_step[1]])):
                                     if i!=0: user_text[1] += ' '
                                     user_text[2] += str(horizontal_run[current_step[1]][i])
-                if image_rect[7].collidepoint(event.pos):
+                if image_rect[5].collidepoint(event.pos):
                     if user_text[0] == '': check[2] = True
                     elif current_step[1] == 0: check[2] = True
                     else:
@@ -184,6 +170,29 @@ def welcome_page():
                         for i in range(len(horizontal_run[current_step[1]])):
                             if i!=0: user_text[2] += ' '
                             user_text[2] += str(horizontal_run[current_step[1]][i])
+                if image_rect[6].collidepoint(event.pos):
+                    if active[1]:
+                        if current_step[0]<len(vertical_run):
+                            vertical_run.pop(current_step[0])
+                            if current_step[0]!=0: current_step[0]-=1
+                            user_text[1] = ''
+                            for i in range(len(vertical_run[current_step[0]])):
+                                if i!=0: user_text[1] += ' '
+                                user_text[1] += str(vertical_run[current_step[0]][i])
+                    if active[2]:
+                        if current_step[1]<len(horizontal_run):
+                            horizontal_run.pop(current_step[1])
+                            if current_step[1]!=0: current_step[1]-=1
+                            user_text[2] = ''
+                            for i in range(len(horizontal_run[current_step[1]])):
+                                if i!=0: user_text[2] += ' '
+                                user_text[2] += str(horizontal_run[current_step[2]][i])
+                if input_rect[0].collidepoint(event.pos): active[0] = True
+                else: active[0] = False
+                if input_rect[1].collidepoint(event.pos): active[1] = True
+                else: active[1] = False
+                if input_rect[2].collidepoint(event.pos): active[2] = True
+                else: active[2] = False
             if event.type == pygame.KEYDOWN:
                 if active[0]:
                     if event.key == pygame.K_RETURN: active[0] = False
@@ -247,98 +256,12 @@ def welcome_page():
         screen.blit(text[2], text_rect[2])
         screen.blit(image[0], image_rect[0])
         screen.blit(image[1], image_rect[1])
-        screen.blit(image[2], image_rect[2])
-        screen.blit(image[3], image_rect[3])
-        if current_step[0] <= len(vertical_run): screen.blit(image[4], image_rect[4])
-        if current_step[0] != 0: screen.blit(image[5], image_rect[5])
-        if current_step[1] <= len(horizontal_run): screen.blit(image[6], image_rect[6])
-        if current_step[1] != 0: screen.blit(image[7], image_rect[7])
+        if current_step[0] <= len(vertical_run): screen.blit(image[2], image_rect[2])
+        if current_step[0] != 0: screen.blit(image[3], image_rect[3])
+        if current_step[1] <= len(horizontal_run): screen.blit(image[4], image_rect[4])
+        if current_step[1] != 0: screen.blit(image[5], image_rect[5])
+        screen.blit(image[6], image_rect[6])
         pygame.display.flip()
-def solution_page(size,solution):
-    screen = pygame.display.set_mode((800, 600))
-    pygame.display.set_caption('Kukarasu Ultimate Solver')
-    font = [pygame.font.Font(None, 60),pygame.font.Font(None, 32)]
-    heading = font[0].render('Solution',True,(255,255,255))
-    heading_rect=heading.get_rect()
-    heading_rect.center = (400,50)
-    image = []
-    image.append(pygame.image.load('./image/home.png'))
-    image.append(pygame.image.load('./image/quit.png'))
-    image.append(pygame.image.load('./image/forward.png'))
-    image.append(pygame.image.load('./image/backward.png'))
-    image[0] = pygame.transform.scale(image[0],(130,130))
-    image[1] = pygame.transform.scale(image[1],(130,130))
-    image[2] = pygame.transform.scale(image[2],(130,130))
-    image[3] = pygame.transform.scale(image[3],(130,130))
-    image_rect = []
-    image_rect.append(image[0].get_rect())
-    image_rect.append(image[1].get_rect())
-    image_rect.append(image[2].get_rect())
-    image_rect.append(image[3].get_rect())
-    image_rect[0].center = (65,550)
-    image_rect[1].center = (735,550)
-    image_rect[2].center = (735,300)
-    image_rect[3].center = (65,300)
-    current_step = 0
-    if len(solution)!=0:
-        
-        while True:
-            screen.fill((0,0,0))
-            surface = pygame.Surface((size*35,size*35))
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return False
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if image_rect[0].collidepoint(event.pos): return True
-                    if image_rect[1].collidepoint(event.pos): return False
-                    if image_rect[2].collidepoint(event.pos):
-                        if current_step != len(solution)-1: current_step+=1
-                    if image_rect[3].collidepoint(event.pos):
-                        if current_step != 0: current_step-=1
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_RIGHT:
-                        if current_step != len(solution)-1: current_step+=1
-                    if event.key == pygame.K_LEFT:
-                        if current_step != 0: current_step-=1
-            for row in range(size):
-                for col in range(size):
-                    color=(255,255,255)
-                    if solution[current_step][row][col]==0: color=(0,0,0)
-                    pygame.draw.rect(surface,color,pygame.Rect(35*col+5,35*row+5,25,25))
-                    if col!=size-1: pygame.draw.line(surface,(255,255,255),(35*col+35,35*row),(35*col+35,35*row+35))
-                if row!=size-1: pygame.draw.line(surface,(255,255,255),(0,35*row+35),(35*size,35*row+35))
-            screen.blit(heading,heading_rect)
-            step_text = font[1].render('Position number '+str(current_step+1),True,(255,255,255))
-            step_text_rect = step_text.get_rect()
-            step_text_rect.center = (400,100)
-            screen.blit(step_text,step_text_rect)
-            surface = pygame.transform.scale(surface,(300,300))
-            surface_rect=surface.get_rect()
-            surface_rect.center = (400,350)
-            screen.blit(image[0], image_rect[0])
-            screen.blit(image[1], image_rect[1])
-            if current_step != len(solution)-1: screen.blit(image[2], image_rect[2])
-            if current_step != 0: screen.blit(image[3], image_rect[3])
-            screen.blit(surface,surface_rect)
-            pygame.display.flip()
-    else:
-        nosol = font.render("No solution is found",True,(255,255,255))
-        nosol_rect = nosol.get_rect()
-        nosol_rect.center = (400,300)
-        screen.blit(nosol,nosol_rect)
-        screen.blit(heading, heading_rect)
-        screen.blit(image[0], image_rect[0])
-        screen.blit(image[1], image_rect[1])
-        pygame.display.flip()
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    return False
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if image_rect[0].collidepoint(event.pos): return True
-                    if image_rect[1].collidepoint(event.pos): return False
 def demo_page(size,demo):
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption('Kukarasu Ultimate Solver')
@@ -445,23 +368,12 @@ def demo_page(size,demo):
                     if image_rect[1].collidepoint(event.pos): return False
 def main():
     pygame.init()
-    loop = True
-    while loop:
-        size,column,row,type,check = welcome_page()
-        if not check: break
-        elif type==0:
-            solution = Blind_search_nonogram.DFS(column,row,size)
-            print(solution_page(size,solution))
-            loop=False
-        # elif type==1:
-        #     solution,demo = BFSKakurasu.main(size,column,row)
-        #     loop = solution_page(size,solution)
-        elif type==2:
-            solution,demo = Blind_search_nonogram.DFS(column,row,size)
-            loop = demo_page(size,demo)
-        # else:
-        #     solution,demo = BFSKakurasu.main(size,column,row)
-        #     loop = demo_page(size,demo)
+    while True:
+        size,column,row,check = welcome_page()
+        if check == 0: break
+        if check ==1: result = BlindNonogram.main(size,column,row)
+        else: result = AnnealingNonogram.main(size,column,row)
+        if not demo_page(size,result): break
     print('Thanh you for using our solver!')
     print('Give us 10 point!')
 main()

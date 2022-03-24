@@ -53,34 +53,28 @@ def valid (matrix, row,size):
     return True
 
 def gen_row(w, s):
-    ''' w=size, s=row'''
-    """Create all patterns of a row or col that match given runs."""
     def gen_seg(o, sp):
         if not o:
             return [[0] * sp]
         return [[0] * x + o[0] + tail
                 for x in range(1, sp - len(o) + 2)
                 for tail in gen_seg(o[1:], sp - x)]
- 
     return [x[1:] for x in gen_seg([[1] * i for i in s], w + 1 - sum(s))]
-def createStep(res,seq):
-    if(res.prev!=[[]]):
-        createStep(res.prev,seq)
-    seq.append(res.base)
-def DFS(row,col,size):
+
+def main(size, col, row):
+    list_print = []
     init=Item(np.full((size,size),0),0,[[]])
     stack=[init]
     res=init
     state_list=[]
-    generated = []
     for i in range(size):
         temp=gen_row(size,col[i])
         state_list.append(temp)
     while(len(stack)):
         temp=stack[-1]
         stack.pop()
-        generated.append(temp.base)
         nextPos=temp.cur+1
+        list_print.append(temp.base)
         if(check(row,col,size,temp.base)):
             res=temp
             break
@@ -93,5 +87,4 @@ def DFS(row,col,size):
             new_item=np.array(new_item)
             if(nextPos-1==0 or valid(new_item,row,size)):
                 stack.append(Item(new_item.copy(),nextPos,temp.base.copy()))
-    seq=[]
-    return res
+    return list_print

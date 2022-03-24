@@ -76,24 +76,11 @@ def createProb(cur,next, temp):
     if(cur>next): return 1
     else: return exp(-(next-cur)/temp)
 
-def printStep(step):
-    #print('Next Step')
-    str=""
-    for row in step:
-        for col in row:
-            if(col==1): str+='*'
-            else: str+='_'
-        str+='\n'
-    print(str)
-    print('|||||||||||||||||')
-    print(' ')
-
 def luyenkim(table,row,col,seq):
     curTable=dupTable(table)
     size=len(table)
     lim=30000
     for t in range(1,lim):
-        print('Step '+str(t))
         newTable=dupTable(curTable)
         #Choosing a random position to change
         newRow=int(random.random()*size)
@@ -102,7 +89,6 @@ def luyenkim(table,row,col,seq):
         else: newTable[newRow][newCol]=0
         #Calculate the current cost/errors
         cur_cost=calCost(curTable,row,col)
-        print('Current Cost: ' + str(cur_cost))
         if(cur_cost==0):
             return curTable
         #Calculate the next cost/errors
@@ -115,30 +101,11 @@ def luyenkim(table,row,col,seq):
     return -1
 
 
-def main():
-    '''
-    size=10
-    row=[ [3,1,1],[3,1,2],[3,4],[1,1,1],[2,1],[2],[3,1],[5,2],[3,3],[2,5] ]
-    col=[ [9],[3,5],[3,4],[1,1],[1],[1],[3,1],[3,2],[3,4],[3,3] ]
-    '''
-    size=5
-    row=[[2],[3],[3],[3],[1,1]]
-    col=[[2],[1,1],[3],[3],[1,1,1]]
-    counter=0
+def main(size,col,row):
+    generated = []
     while(True):
-        counter+=1
         newTable=genRandomTable(size)
         seq=[]
         res=luyenkim(newTable,row,col,seq)
-        if(res==-1):
-            print('Attempted '+str(counter))
-            print('Do you want to continue?(Y/N)')
-            ans=input()
-            if(ans.lower()=='y'): continue
-            else: break
-        else: 
-            for step in seq:
-                print('----------------------')
-                printStep(step)
-                print('----------------------')
-            break
+        generated.extend(seq)
+        if(res!=-1): return generated
