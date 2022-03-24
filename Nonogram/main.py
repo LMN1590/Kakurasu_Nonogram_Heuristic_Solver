@@ -1,4 +1,5 @@
 import pygame
+import Blind_search_nonogram,SimAnneal
 def welcome_page():
     screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption('Nonogram Ultimate Solver')
@@ -77,17 +78,50 @@ def welcome_page():
                 else: active[1] = False
                 if input_rect[2].collidepoint(event.pos): active[2] = True
                 else: active[2] = False
-                if image_rect[0].collidepoint(event.pos):
+                if image_rect[0].collidepoint(event.pos) or image_rect[1].collidepoint(event.pos) or image_rect[2].collidepoint(event.pos) or image_rect[3].collidepoint(event.pos):
                     if user_text[0] == '': check[0] = False
-                    elif user_text[1] == '': check[1] = False
                     else:
-                        check[0], check[1] = True, True
-                if image_rect[1].collidepoint(event.pos):
-                    pass
-                if image_rect[2].collidepoint(event.pos):
-                    pass
-                if image_rect[3].collidepoint(event.pos):
-                    pass
+                        check[0] = True
+                        if current_step[0] == int(user_text[0])-1:
+                            if current_step[0] == len(vertical_run):
+                                if user_text[1] == '': check[1] == False
+                                else:
+                                    check[1] == True
+                                    vertical_run.append(list(map(int,user_text[1].split())))
+                            else:
+                                if user_text[1] != '':
+                                    check[1] == True
+                                    vertical_run[current_step[0]] = list(map(int,user_text[1].split()))
+                        if len(vertical_run)!=0:
+                            for i in vertical_run:
+                                if sum(i)>int(user_text[0]):
+                                    check[1] = False
+                                    break
+                        if len(vertical_run) != int(user_text[0]): check[1]=False
+                        if current_step[1] == int(user_text[0])-1:
+                            if current_step[1] == len(horizontal_run):
+                                if user_text[2] == '': check[2] == False
+                                else:
+                                    check[2] = True
+                                    horizontal_run.append(list(map(int,user_text[2].split())))
+                            else:
+                                if user_text[2] != '': horizontal_run[current_step[1]] = list(map(int,user_text[2].split()))
+                                check[2] = True
+                        if len(horizontal_run)!=0:
+                            for i in horizontal_run:
+                                if sum(i)>int(user_text[0]):
+                                    check[2] = False
+                                    break
+                        if len(horizontal_run) != int(user_text[0]): check[2]=False
+                        if check[1] and check[2]:
+                            if image_rect[0].collidepoint(event.pos):
+                                return int(user_text[0]),vertical_run,horizontal_run,0,True
+                            if image_rect[1].collidepoint(event.pos):
+                                return int(user_text[0]),vertical_run,horizontal_run,1,True
+                            if image_rect[2].collidepoint(event.pos):
+                                return int(user_text[0]),vertical_run,horizontal_run,2,True
+                            if image_rect[3].collidepoint(event.pos):
+                                return int(user_text[0]),vertical_run,horizontal_run,3,True
                 if image_rect[4].collidepoint(event.pos):
                     if user_text[0] == '': check[0], check[1] = False, True
                     elif user_text[1] == '': check[0], check[1] = True, False
@@ -415,6 +449,19 @@ def main():
     while loop:
         size,column,row,type,check = welcome_page()
         if not check: break
-        
+        elif type==0:
+            solution = Blind_search_nonogram.DFS(column,row,size)
+            print(solution_page(size,solution))
+            loop=False
+        # elif type==1:
+        #     solution,demo = BFSKakurasu.main(size,column,row)
+        #     loop = solution_page(size,solution)
+        elif type==2:
+            solution,demo = Blind_search_nonogram.DFS(column,row,size)
+            loop = demo_page(size,demo)
+        # else:
+        #     solution,demo = BFSKakurasu.main(size,column,row)
+        #     loop = demo_page(size,demo)
     print('Thanh you for using our solver!')
+    print('Give us 10 point!')
 main()

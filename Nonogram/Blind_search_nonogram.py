@@ -63,19 +63,23 @@ def gen_row(w, s):
                 for tail in gen_seg(o[1:], sp - x)]
  
     return [x[1:] for x in gen_seg([[1] * i for i in s], w + 1 - sum(s))]
-
+def createStep(res,seq):
+    if(res.prev!=[[]]):
+        createStep(res.prev,seq)
+    seq.append(res.base)
 def DFS(row,col,size):
     init=Item(np.full((size,size),0),0,[[]])
     stack=[init]
     res=init
     state_list=[]
-    generated=[]
+    generated = []
     for i in range(size):
         temp=gen_row(size,col[i])
         state_list.append(temp)
     while(len(stack)):
         temp=stack[-1]
         stack.pop()
+        generated.append(temp.base)
         nextPos=temp.cur+1
         if(check(row,col,size,temp.base)):
             res=temp
@@ -89,11 +93,5 @@ def DFS(row,col,size):
             new_item=np.array(new_item)
             if(nextPos-1==0 or valid(new_item,row,size)):
                 stack.append(Item(new_item.copy(),nextPos,temp.base.copy()))
-
+    seq=[]
     return res
-
-size=10
-row=[[4,3],[2,1,3],[8],[3,3],[3,1],[2],[1,1,2],[1,4],[1,3],[1,1,2]]
-col=[[2,2,3],[7],[1,3,1],[4],[1],[3],[5,4],[4,3],[1,1,3],[2]]
-x=DFS(row,col,size).base
-print(x)

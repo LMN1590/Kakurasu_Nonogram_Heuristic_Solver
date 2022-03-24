@@ -1,8 +1,9 @@
 import BestFSKakurasu,BFSKakurasu
 import tracemalloc
 size = 4
+test = 500
 total = [0,0]
-for i in range(500):
+for i in range(test):
     import numpy as np
     test_row=np.random.randint(0,2,(size,size))
     col_run, row_run = [], []
@@ -24,5 +25,5 @@ for i in range(500):
     BestFSKakurasu.main(size,col_run,row_run)
     total[1] += tracemalloc.get_tracemalloc_memory()
     tracemalloc.stop()
-print(total[0]/size)
-print(total[1]/size)
+print(total[0]/test)
+print(total[1]/test)
