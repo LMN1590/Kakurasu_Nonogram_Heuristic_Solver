@@ -4,4 +4,7 @@ Overviewe of assignment 1 of course Introduction to Artificial Intelligence, HCM
 
 ## Heuristic Solution for Kakurasu and Nonogram game
 ### Nonogram
-- 
+- Simulated Aneealing:
++ sad
++ asd 
+- Blind DFS:
